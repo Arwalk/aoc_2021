@@ -2,9 +2,7 @@ ExUnit.start()
 use Bitwise
 
 defmodule Aoc3 do
-
   def lines_as_bits(lines) do
-
     charlist_to_bits = fn charlist ->
       charlist
       |> String.graphemes()
@@ -15,7 +13,6 @@ defmodule Aoc3 do
 
     lines
     |> Enum.map(charlist_to_bits)
-
   end
 
   def as_columns(lines) do
@@ -52,8 +49,19 @@ defmodule Aoc3 do
   end
 
   def get_power_consumption(lines) do
-    gamma = Task.async(fn -> get_column_bit_counts(lines) |> Enum.map(&get_most_common_bit/1) |> Enum.reduce(0, &accumulate_bits/2) end)
-    epsilon = Task.async(fn ->get_column_bit_counts(lines) |> Enum.map(&get_least_common_bit/1) |> Enum.reduce(0, &accumulate_bits/2) end)
+    gamma =
+      Task.async(fn ->
+        get_column_bit_counts(lines)
+        |> Enum.map(&get_most_common_bit/1)
+        |> Enum.reduce(0, &accumulate_bits/2)
+      end)
+
+    epsilon =
+      Task.async(fn ->
+        get_column_bit_counts(lines)
+        |> Enum.map(&get_least_common_bit/1)
+        |> Enum.reduce(0, &accumulate_bits/2)
+      end)
 
     Task.await(gamma) * Task.await(epsilon)
   end
@@ -65,31 +73,43 @@ defmodule Aoc3 do
       fn _, acc ->
         {index, current_list} = acc
 
-        bit_count = current_list
-        |> as_columns()
-        |> Enum.map(&count_bits/1)
-        |> Enum.map(get_relevant_bits)
+        bit_count =
+          current_list
+          |> as_columns()
+          |> Enum.map(&count_bits/1)
+          |> Enum.map(get_relevant_bits)
 
         case Enum.count(current_list) do
-          1 -> {:halt, hd(current_list)}
-          _ -> {:cont, {index + 1, Enum.filter(current_list, fn item -> Enum.at(item, index) == Enum.at(bit_count, index) end)}}
+          1 ->
+            {:halt, hd(current_list)}
+
+          _ ->
+            {:cont,
+             {index + 1,
+              Enum.filter(current_list, fn item ->
+                Enum.at(item, index) == Enum.at(bit_count, index)
+              end)}}
         end
       end
     end
 
-    oxygen = Task.async(fn -> 0..Enum.count(lines_bits)
-    |> Enum.reduce_while({0, lines_bits}, is_corresponding.(&get_most_common_bit/1))
-    |> Enum.reduce(0, &accumulate_bits/2) end )
+    oxygen =
+      Task.async(fn ->
+        0..Enum.count(lines_bits)
+        |> Enum.reduce_while({0, lines_bits}, is_corresponding.(&get_most_common_bit/1))
+        |> Enum.reduce(0, &accumulate_bits/2)
+      end)
 
-    co2 = Task.async(fn -> 0..Enum.count(lines_bits)
-    |> Enum.reduce_while({0, lines_bits}, is_corresponding.(&get_least_common_bit/1))
-    |> Enum.reduce(0, &accumulate_bits/2) end )
+    co2 =
+      Task.async(fn ->
+        0..Enum.count(lines_bits)
+        |> Enum.reduce_while({0, lines_bits}, is_corresponding.(&get_least_common_bit/1))
+        |> Enum.reduce(0, &accumulate_bits/2)
+      end)
 
     Task.await(oxygen) * Task.await(co2)
   end
-
 end
-
 
 defmodule ReducerTest do
   use ExUnit.Case
@@ -142,11 +162,10 @@ defmodule ReducerTest do
 
     assert 230 = Aoc3.get_life_support_rating(@sample_input)
   end
-
 end
 
 input = File.stream!("aoc_3.input") |> Enum.map(&String.trim/1)
 
-IO.puts "First part: #{Aoc3.get_power_consumption(input)}"
+IO.puts("First part: #{Aoc3.get_power_consumption(input)}")
 
-IO.puts "Second part: #{Aoc3.get_life_support_rating(input)}"
+IO.puts("Second part: #{Aoc3.get_life_support_rating(input)}")
