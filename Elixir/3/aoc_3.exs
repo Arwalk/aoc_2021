@@ -164,7 +164,7 @@ defmodule ReducerTest do
   end
 end
 
-input = File.stream!("aoc_3.input") |> Enum.map(&String.trim/1)
+input = File.stream!("../../inputs/aoc_3.input") |> Enum.map(&String.trim/1)
 
 IO.puts("First part: #{Aoc3.get_power_consumption(input)}")
 

@@ -68,7 +68,7 @@ defmodule Aoc2Tests do
 end
 
 get_input = fn ->
-  File.stream!("aoc_2.input")
+  File.stream!("../../inputs/aoc_2.input")
   |> Stream.map(&String.trim/1)
   |> Enum.map(&String.split/1)
   |> Enum.map(fn sublist -> {hd(sublist), elem(Integer.parse(hd(tl(sublist))), 0)} end)

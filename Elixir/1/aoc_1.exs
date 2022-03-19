@@ -1,7 +1,7 @@
 ExUnit.start()
 
 get_input = fn ->
-  File.stream!("aoc_1.input") |> Enum.map(fn line -> elem(Integer.parse(line), 0) end)
+  File.stream!("../../inputs/aoc_1.input") |> Enum.map(fn line -> elem(Integer.parse(line), 0) end)
 end
 
 defmodule Aoc1 do

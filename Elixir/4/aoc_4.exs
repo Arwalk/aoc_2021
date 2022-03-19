@@ -184,7 +184,7 @@ defmodule Aoc4Test do
   end
 end
 
-{draws, boards} = Aoc4.get_input_from_filename("aoc_4.input")
+{draws, boards} = Aoc4.get_input_from_filename("../../inputs/aoc_4.input")
 winners = Aoc4.solve(draws, boards)
 
 first_winner_score = winners |> hd() |> elem(0)
