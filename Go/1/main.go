@@ -39,7 +39,7 @@ func check(e error) {
 }
 
 func main() {
-	file, err := os.Open("./aoc_1.input")
+	file, err := os.Open("./inputs/aoc_1.input")
 	check(err)
 	defer func(file *os.File) {
 		err := file.Close()
